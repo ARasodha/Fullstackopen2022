@@ -9,6 +9,7 @@ const Button = (props) => {
     </div>
   )
 }
+
 const StatisticsLine = (props) => {
   return (
     <>
@@ -82,7 +83,6 @@ const Anecdote = (props) => {
     }
   });
 
-
   return (
     <div>
       <p>{anecdotes[selected]}</p>
@@ -94,7 +94,6 @@ const Anecdote = (props) => {
       <p>has {voteCount[mostVotesIdx]} votes</p>
     </div>
   )
-
 }
 
 const App = () => {
