@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import personService from './services/persons';
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
+
   return persons.map(person => {
-    return <p key={person.name}> {person.name} {person.number}</p>
+    return (
+      <div key={person.name}>
+        <p> {person.name} {person.number} <button id={person.id} onClick={handleDelete}>Delete</button></p>
+      </div>
+    )
   })
 };
 
@@ -29,45 +34,77 @@ const PersonForm = (props) => {
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons);
       })
-  }, []);
+  },[]);
 
   let handleAddBtn = (event) => {
     event.preventDefault();
-    if (persons.map(({name}) => name.toLowerCase()).includes(newName.toLowerCase())) {
-      alert(`${newName} is already added to the phonebook.`);
-      return;
+    let names = persons.map(({name}) => name.toLowerCase());
+
+    if (names.includes(newName.toLowerCase())) {
+      let person = persons.find(person => person.name.toLowerCase() === newName.toLowerCase());
+      let answer = window.confirm(
+            `${newName} is already added to the phonebook, replace the old number with a new one?`);
+      
+      let newPerson = {...person, number: newNumber};
+      if (answer) {
+        personService
+          .updatePerson(person.id, newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.filter(p => p.id !== person.id).concat(returnedPerson));
+          })
+      } else return;
+    } else {
+      const newPerson = {name: newName, number: newNumber};
+
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson));
+        });
     }
 
-    const newPerson = persons.concat({name: newName, number: newNumber});
-    setPersons(newPerson);
     setNewName('');
     setNewNumber('');
   }
 
-  let filteredPersons = 
+  const filteredPersons = 
     persons.filter(({name}) => name.toLowerCase().startsWith(search.toLowerCase())) || persons;
 
-  let handleTextInput = (event) => {
+  const handleTextInput = (event) => {
     setNewName(event.target.value);
   }
 
-  let handleNumberInput = (event) => {
+  const handleNumberInput = (event) => {
     setNewNumber(event.target.value);
   }
 
-  let handleFilterInput = (event) => {
+  const handleFilterInput = (event) => {
     setSearch(event.target.value);
+  }
+
+  const handleDelete = (event) => {
+    event.preventDefault();
+    let personId = event.target.getAttribute('id');
+    let person = persons.find(person => person.id === Number(personId))
+    let answer = window.confirm(`Delete ${person.name}?`);
+
+    if (answer) {
+      personService
+        .deletePerson(personId)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== Number(personId)));
+        })
+    }
   }
 
   return (
@@ -81,7 +118,7 @@ const App = () => {
         handleNumberInput={handleNumberInput} handleAddBtn={handleAddBtn} />
 
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handleDelete={handleDelete} />
     </div>
   )
 }
