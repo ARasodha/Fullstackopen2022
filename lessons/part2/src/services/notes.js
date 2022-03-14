@@ -28,8 +28,10 @@ const update = (id, newObject) => {
   return request.then(response => response.data);
 }
 
-export default {
+let noteService = {
   getAll,
   create,
   update
 }
+
+export default noteService;

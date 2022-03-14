@@ -1,5 +1,18 @@
 import { useState, useEffect } from 'react';
 import personService from './services/persons';
+import './index.css';
+
+const Notification = ({ message, type }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return (
+    <div className={type === 'success' ? 'success' : 'error'}>
+      {message}
+    </div>
+  )
+}
 
 const Persons = ({ persons, handleDelete }) => {
 
@@ -37,6 +50,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [search, setSearch] = useState('');
+  const [notif, setNotif] = useState([null, null]);
 
   useEffect(() => {
     personService
@@ -62,6 +76,10 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(persons.filter(p => p.id !== person.id).concat(returnedPerson));
           })
+          .catch(error => {
+            setNotif([`Information of ${newPerson.name} has been removed from server`, 'error']);
+            setTimeout(() => setNotif([null, null]), 5000);
+          })
       } else return;
     } else {
       const newPerson = {name: newName, number: newNumber};
@@ -70,6 +88,8 @@ const App = () => {
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson));
+          setNotif([`Added ${returnedPerson.name}`, 'success']);
+            setTimeout(() => setNotif([null, null]), 5000);
         });
     }
 
@@ -110,6 +130,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notif[0]} type={notif[1]}/>
       <Filter value={search} onChange={handleFilterInput}/>
 
       <h2>add a new</h2>
