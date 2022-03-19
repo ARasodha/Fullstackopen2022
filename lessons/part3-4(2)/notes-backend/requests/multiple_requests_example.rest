@@ -1,0 +1,22 @@
+GET http://localhost:3001/api/notes
+
+###
+POST http://localhost:3001/api/notes/ HTTP/1.1
+content-type: application/json
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+###
+DELETE http://localhost:3001/api/notes/623385dbcf217b71c0c138ce
+
+###
+PUT http://localhost:3001/api/notes/6233653a36380ef6ce000010
+content-type: application/json
+
+{
+  "content": "promises > callback-functions",
+  "important": true
+}
