@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFyanVuIiwiaWQiOiI2MjM5ZjExMzY2YWZjMWNhOTU2MjdiYWIiLCJpYXQiOjE2NDc5Njg3NzV9.W2qR3UtQ3sqg9Q2kgp_BweXFd-uH5M-V4b6XV
+
+{
+  "content": "Single Page Apps use token authenticationl",
+  "important": true
+}
