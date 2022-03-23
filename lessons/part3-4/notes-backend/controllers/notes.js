@@ -13,7 +13,7 @@ const getTokenFrom = request => {
 }
 
 notesRouter.get('/', async (request, response) => {
-    const notes = await Note.find({})
+    const notes = await Note.find({}).populate('user', {name: 1})
     response.json(notes)
 })
 
@@ -23,7 +23,6 @@ notesRouter.get('/:id', async (request, response) => {
   if (note) {
     response.json(note.toJSON())
   } else {
-    console.log('note not found')
     response.status(404).end()
   }
 })
