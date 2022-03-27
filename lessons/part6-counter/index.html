@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redux Practice</title>
+</head>
+<body>
+  <input id="todo" type="text">
+  <button id="submit-todo">submit</button>
+  <div id="container"></div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/5.0.0-alpha.0/redux.min.js" integrity="sha512-6WJ7yVV5HDZwZ0RT5CM3FCTgTt5qC5BlfQ9bG43y0BowT5a3GXQqDYaoZgCk+i9vuB1Yj6KdBPQAU8Ra7tV32w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    const reducer = Redux.combineReducers({
+      todos: (state = [], action) => {
+        const newState = Object.assign([], state)
+        if (action.type === 'add') {
+          newState.push(action.item)
+        }
+
+        if (action.type === 'remove') {
+          newState.splice(action.index, 1)
+        }
+        return newState
+      }
+    })
+
+    const store = Redux.createStore(reducer)
+    // Window.store = store
+
+    const render = () => {
+      const container = document.getElementById('container')
+      container.innerHTML = ''
+      const state = store.getState()
+      state.todos.forEach((todo, idx) => {
+        const div = document.createElement('div')
+        div.innerHTML = todo
+        container.appendChild(div)
+        div.onclick = () => {
+          console.log('click div')
+          store.dispatch({
+            type: 'remove',
+            index: idx
+          })
+          render()
+        }
+      })
+    }
+
+    document.getElementById('submit-todo').onclick = () => {
+      store.dispatch({
+        type: 'add',
+        item: document.getElementById('todo').value
+      })
+      render()
+    }
+
+    render()
+  </script>
+</body>
+</html>
