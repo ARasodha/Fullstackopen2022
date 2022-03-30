@@ -14,6 +14,11 @@
       "content": "erwerwe",
       "important": false,
       "id": 3
+    },
+    {
+      "content": "New Note",
+      "important": false,
+      "id": 4
     }
   ]
 }
