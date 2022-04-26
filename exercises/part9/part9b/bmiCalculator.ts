@@ -11,11 +11,11 @@ const parseArgumentsBmi = (args: string[]): BmiValues => {
     return {
       heightCm: Number(args[2]),
       weightKg: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided arguments are not numbers!');
   }
-}
+};
 
 function calculateBmi(heightCm: number, weightKg: number): string {
   const heightM: number = heightCm / 100;
@@ -40,14 +40,16 @@ function calculateBmi(heightCm: number, weightKg: number): string {
 
 try {
   const { heightCm, weightKg } = parseArgumentsBmi(process.argv);
-  console.log(calculateBmi(heightCm, weightKg))
+  console.log(calculateBmi(heightCm, weightKg));
 } catch (error: unknown) {
-  let errorMessage: string = 'Something bad happened.';
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
 
-  console.log(errorMessage)
+  console.log(errorMessage);
 }
+
+export default calculateBmi;
 
 // console.log(calculateBmi(180, 74)) // Normal (healthy weight)

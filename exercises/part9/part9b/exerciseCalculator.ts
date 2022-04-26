@@ -11,13 +11,13 @@ interface ExerciseInfo {
 const parseArgumentsExercise = (args: string[]): number[] => {
   if (args.length < 3) throw new Error('not enough arguments');
 
-  let inputArgs = args.slice(3).map(arg => Number(arg));
+  const inputArgs = args.slice(3).map(arg => Number(arg));
   if (inputArgs.every(arg => !isNaN(arg))) {
     return inputArgs;
   } else {
     throw new Error('Provided values are not all numbers!');
   }
-}
+};
 
 function getTrainingDays(hours: number[]): number {
   let trainingDays = 0;
@@ -25,7 +25,7 @@ function getTrainingDays(hours: number[]): number {
     if (day !== 0) {
       trainingDays++;
     }
-  })
+  });
 
   return trainingDays;
 }
@@ -44,10 +44,10 @@ function getRatingDescription(rating: number): string {
   switch (rating) {
     case 1: 
       return "poor performance, needs improvement";
-    case 2:
-      return "not too bad but could have been better";
     case 3: 
       return "great job, keep it up!";
+    default: 
+      return "not too bad but could have been better";
   }
 }
 
@@ -55,13 +55,13 @@ function calculateAverage(hours: number[]): number {
   return hours.reduce((accum, val) => accum + val, 0) / hours.length;
 }
 
-function calculateExercises(hours: number[], target: number = 2): ExerciseInfo {
+function calculateExercises(hours: number[], target = 2): ExerciseInfo {
   const periodLength: number = hours.length;
   const trainingDays: number = getTrainingDays(hours);
   const success: boolean = hours.every(hour => hour >= target);
   const rating: number = getRating(trainingDays, success);
   const ratingDescription: string = getRatingDescription(rating);
-  const average: number = calculateAverage(hours)
+  const average: number = calculateAverage(hours);
 
   return {
     periodLength,
@@ -71,14 +71,14 @@ function calculateExercises(hours: number[], target: number = 2): ExerciseInfo {
     ratingDescription,
     target,
     average
-  }
+  };
 } 
 
 try {
   const hours: number[] = parseArgumentsExercise(process.argv);
   console.log(calculateExercises(hours));
 } catch (error: unknown) {
-  let errorMessage: string = 'Something went wrong';
+  let errorMessage = 'Something went wrong';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
@@ -86,7 +86,7 @@ try {
   console.log(errorMessage);
 }
 
-
+export default calculateExercises;
 
 // console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2)) 
 // { periodLength: 7,
@@ -106,3 +106,4 @@ try {
 //   ratingDescription: 'not too bad but could be better',
 //   target: 2,
 //   average: 1.7222222222222223 }
+
